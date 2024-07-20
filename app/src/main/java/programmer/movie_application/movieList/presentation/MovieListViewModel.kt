@@ -24,11 +24,11 @@ class MovieListViewModel @Inject constructor(
         getUpcomingMovieList(false)
     }
 
-    fun onEvent(events: MovieListUiEvents){
+    fun onEvent(events: MovieListUiEvents, titleScreen : String = "Popular"){
         when(events){
             is MovieListUiEvents.Navigate ->{
                 _movieListState.update {
-                    it.copy(isCurrentPopularScreen = !movieListState.value.isCurrentPopularScreen)
+                    it.copy(currentScreenTitle = titleScreen)
                 }
             }
             is MovieListUiEvents.Paginate ->{
