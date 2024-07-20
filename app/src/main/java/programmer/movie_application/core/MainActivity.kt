@@ -1,4 +1,4 @@
-package programmer.movie_application
+package programmer.movie_application.core
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

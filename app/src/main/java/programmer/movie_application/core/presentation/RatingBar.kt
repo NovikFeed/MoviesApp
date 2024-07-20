@@ -1,4 +1,4 @@
-package programmer.movie_application.movieUI
+package programmer.movie_application.core.presentation
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
