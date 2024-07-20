@@ -54,6 +54,17 @@ fun HomeScreen(navController: NavController){
         bottomBar = { BottomBar(navController = bottomNavController, onEvent = movieListViewModel::onEvent)}
     ) {
         Box(modifier = Modifier.fillMaxSize().padding(it)){
+            NavHost(
+                navController = bottomNavController,
+                startDestination = Screen.PopularMovieList.rout,
+            ){
+                composable(Screen.PopularMovieList.rout){
+                    PopularMovieScreen()
+                }
+                composable(Screen.UpcomingMovieList.rout){
+                    UpcomingMovieScreen()
+                }
+            }
         }
     }
 }
