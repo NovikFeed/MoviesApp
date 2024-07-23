@@ -57,7 +57,7 @@ fun MovieCard(
 ){
     val imageState = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(MovieAPI.IMAGE_BASE_URL + movie.backdrop_path)
+            .data(MovieAPI.IMAGE_BASE_URL + movie.poster_path)
             .size(Size.ORIGINAL)
             .build()
     ).state
