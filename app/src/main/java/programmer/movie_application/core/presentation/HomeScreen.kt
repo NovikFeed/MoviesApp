@@ -54,7 +54,9 @@ fun HomeScreen(navController: NavHostController){
         },
         bottomBar = { BottomBar(navController = bottomNavController, onEvent = movieListViewModel::onEvent)}
     ) {
-        Box(modifier = Modifier.fillMaxSize().padding(it)){
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(it)){
             NavHost(
                 navController = bottomNavController,
                 startDestination = Screen.PopularMovieList.rout,
@@ -73,6 +75,20 @@ fun HomeScreen(navController: NavHostController){
                         onEvent = movieListViewModel::onEvent
                     )
                 }
+                composable(Screen.TopRatedMovieList.rout){
+                    TopRatedMovieScreen(
+                        navController = navController,
+                        movieStateList = movieState,
+                        onEvent = movieListViewModel::onEvent
+                    )
+                }
+                composable(Screen.NowPlayingMovieList.rout){
+                    NowPlayingMovieScreen(
+                        navController = navController,
+                        movieStateList = movieState,
+                        onEvent = movieListViewModel::onEvent
+                    )
+                }
             }
         }
     }
@@ -86,6 +102,8 @@ fun BottomBar(
     val listElements = listOf(
         BottomItem.Popular,
         BottomItem.Upcoming,
+        BottomItem.TopRated,
+        BottomItem.NowPlaying
     )
     val selected = rememberSaveable{
         mutableIntStateOf(0)
@@ -105,6 +123,14 @@ fun BottomBar(
                             1 -> {onEvent(MovieListUiEvents.Navigate, "Upcoming Movies")
                                 navController.popBackStack()
                                 navController.navigate(Screen.UpcomingMovieList.rout)
+                            }
+                            2 -> {onEvent(MovieListUiEvents.Navigate, "Top Rated Movies")
+                                navController.popBackStack()
+                                navController.navigate(Screen.TopRatedMovieList.rout)
+                            }
+                            3 -> {onEvent(MovieListUiEvents.Navigate, "Now Playing Movies")
+                                navController.popBackStack()
+                                navController.navigate(Screen.NowPlayingMovieList.rout)
                             }
                         }
                               },
