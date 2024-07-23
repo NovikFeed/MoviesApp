@@ -106,7 +106,7 @@ fun MovieCard(
             }
         }
         Spacer(modifier = Modifier.height(6.dp))
-        Text(modifier = Modifier.padding(start = 26.dp, end = 8.dp),
+        Text(modifier = Modifier.padding(start = 16.dp, end = 8.dp),
             text = movie.title,
             color = Color.White,
             fontSize = 15.sp,
@@ -121,7 +121,7 @@ fun MovieCard(
                 rating = movie.vote_average/2)
             Text(
                 modifier = Modifier.padding(start = 4.dp),
-                text = (movie.vote_average/2).toString().take(2),
+                text = (movie.vote_average/2).toString().take(3),
                 color = Color.LightGray,
                 fontSize = 15.sp,
                 maxLines = 1)
