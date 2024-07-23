@@ -85,6 +85,7 @@ class MovieListViewModel @Inject constructor(
                     is Resource.Success -> {
                         result.data?.let {list ->
                             _movieListState.update { it.copy(
+                                isLoading = false,
                                 popularMovieList = movieListState.value.popularMovieList + list.shuffled(),
                                 popularMovieListPage = movieListState.value.popularMovieListPage + 1
                             ) }
