@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import programmer.movie_application.movieList.presentation.MovieListState
 import programmer.movie_application.movieList.presentation.MovieListUiEvents
 import programmer.movie_application.movieList.presentation.MovieListViewModel
 import programmer.movie_application.movieNavigation.BottomItem
@@ -35,7 +36,7 @@ import programmer.movie_application.movieNavigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController){
+fun HomeScreen(navController: NavHostController){
     val movieListViewModel = hiltViewModel<MovieListViewModel>()
     val movieState = movieListViewModel.movieListState.collectAsState().value
     val bottomNavController = rememberNavController()
@@ -59,10 +60,18 @@ fun HomeScreen(navController: NavController){
                 startDestination = Screen.PopularMovieList.rout,
             ){
                 composable(Screen.PopularMovieList.rout){
-                    PopularMovieScreen()
+                    PopularMovieScreen(
+                        navController = navController,
+                        movieStateList = movieState,
+                        onEvent = movieListViewModel::onEvent
+                    )
                 }
                 composable(Screen.UpcomingMovieList.rout){
-                    UpcomingMovieScreen()
+                    UpcomingMovieScreen(
+                        navController = navController,
+                        movieStateList = movieState,
+                        onEvent = movieListViewModel::onEvent
+                    )
                 }
             }
         }
@@ -89,11 +98,11 @@ fun BottomBar(
                     onClick = {
                               selected.intValue = index
                         when(selected.intValue){
-                            0 -> {onEvent(MovieListUiEvents.Navigate, "Popular")
+                            0 -> {onEvent(MovieListUiEvents.Navigate, "Popular Movies")
                                 navController.popBackStack()
                                 navController.navigate(Screen.PopularMovieList.rout)
                             }
-                            1 -> {onEvent(MovieListUiEvents.Navigate, "Upcoming")
+                            1 -> {onEvent(MovieListUiEvents.Navigate, "Upcoming Movies")
                                 navController.popBackStack()
                                 navController.navigate(Screen.UpcomingMovieList.rout)
                             }

@@ -42,14 +42,14 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Home.rout){
                             HomeScreen(navController)
                         }
-                        composable(route = Screen.Details.rout + "/{moviedId}",
+                        composable(route = Screen.Details.rout + "/{movieId}",
                             arguments = listOf(
                                 navArgument("movieId"){
                                     type = NavType.IntType
                                 }
                             )
-                        ){backStackEntry ->
-                            //DetailsScreen(backStackEntry)
+                        ){
+                            DetailsScreen()
                         }
 
 
