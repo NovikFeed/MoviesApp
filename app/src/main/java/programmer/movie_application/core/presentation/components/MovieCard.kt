@@ -26,22 +26,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
+import programmer.movie_application.core.presentation.util.getAverageColor
 import programmer.movie_application.movieList.data.remote.MovieAPI
 import programmer.movie_application.movieList.domain.model.Movie
 import programmer.movie_application.movieNavigation.Screen
@@ -59,7 +63,7 @@ fun MovieCard(
     ).state
 
     val defaultColor = MaterialTheme.colorScheme.secondaryContainer
-    val dominantColor by remember{
+    var dominantColor by remember {
         mutableStateOf(defaultColor)
     }
     Column(
@@ -81,6 +85,7 @@ fun MovieCard(
             }
     ) {
         if(imageState is AsyncImagePainter.State.Success){
+            dominantColor = getAverageColor(imageBitmap = imageState.result.drawable.toBitmap().asImageBitmap())
             Image(
                 modifier = Modifier
                     .fillMaxSize()
