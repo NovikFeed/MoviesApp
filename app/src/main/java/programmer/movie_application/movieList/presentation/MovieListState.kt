@@ -12,7 +12,8 @@ data class MovieListState (
     val upcomingMovieList : List<Movie> = emptyList(),
     val nowPlayingMovieList : List<Movie> = emptyList(),
     val topRateMovieList : List<Movie> = emptyList(),
-    val currentScreenTitle : String = "Popular",
+    val favouriteMovieList : List<Movie> = emptyList(),
+    val currentScreenTitle : String = "Popular Movies",
 
 
     ){
