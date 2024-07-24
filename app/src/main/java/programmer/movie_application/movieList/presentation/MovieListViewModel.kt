@@ -170,8 +170,7 @@ class MovieListViewModel @Inject constructor(
             movieListRepository.getMovieListFromDb(Category.FAVOURITE).collectLatest {list ->
                     _movieListState.update {
                         it.copy(
-                            favouriteMovieList = movieListState.value.favouriteMovieList.union(list)
-                                .toList(),
+                            favouriteMovieList = list,
                             isLoading = false
                         )
                     }
