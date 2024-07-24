@@ -1,5 +1,6 @@
 package programmer.movie_application.movieList.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import programmer.movie_application.movieList.data.repository.MovieListRepository
@@ -22,13 +23,16 @@ class MovieListViewModel @Inject constructor(
     init {
         getPopularMovieList(false)
         getUpcomingMovieList(false)
+        getNowPlayingMovies(false)
+        getTopRatedMovies(false)
+        getFavouriteMovieList()
     }
 
-    fun onEvent(events: MovieListUiEvents){
+    fun onEvent(events: MovieListUiEvents, titleScreen : String = "Popular Movies"){
         when(events){
             is MovieListUiEvents.Navigate ->{
                 _movieListState.update {
-                    it.copy(isCurrentPopularScreen = !movieListState.value.isCurrentPopularScreen)
+                    it.copy(currentScreenTitle = titleScreen)
                 }
             }
             is MovieListUiEvents.Paginate ->{
@@ -37,6 +41,15 @@ class MovieListViewModel @Inject constructor(
                 }
                 else if(events.category == Category.UPCOMING){
                     getUpcomingMovieList(true)
+                }
+                else if(events.category == Category.NOW_PLAYING){
+                    getNowPlayingMovies(true)
+                }
+                else if(events.category == Category.TOP_RATED){
+                    getTopRatedMovies(true)
+                }
+                else if(events.category == Category.FAVOURITE){
+                    getFavouriteMovieList()
                 }
             }
 
@@ -59,6 +72,7 @@ class MovieListViewModel @Inject constructor(
                     is Resource.Success -> {
                         result.data?.let {list ->
                             _movieListState.update { it.copy(
+                                isLoading = false,
                                 upcomingMovieList = movieListState.value.upcomingMovieList + list.shuffled(),
                                 upcomingMovieListPage = movieListState.value.upcomingMovieListPage + 1
                             ) }
@@ -85,6 +99,7 @@ class MovieListViewModel @Inject constructor(
                     is Resource.Success -> {
                         result.data?.let {list ->
                             _movieListState.update { it.copy(
+                                isLoading = false,
                                 popularMovieList = movieListState.value.popularMovieList + list.shuffled(),
                                 popularMovieListPage = movieListState.value.popularMovieListPage + 1
                             ) }
@@ -94,4 +109,73 @@ class MovieListViewModel @Inject constructor(
             }
         }
     }
+
+    private fun getNowPlayingMovies(forceFetchFromRemote: Boolean){
+        viewModelScope.launch {
+            _movieListState.update { it.copy(isLoading = true) }
+            movieListRepository.getMovieList(
+                forceFetchFromRemote,
+                Category.NOW_PLAYING,
+                movieListState.value.nowPlayingMovieListPage).collectLatest {result ->
+                when (result) {
+                    is Resource.Error -> _movieListState.update { it.copy(isLoading = false) }
+                    is Resource.Loading -> _movieListState.update { it.copy(isLoading = result.isLoading) }
+                    is Resource.Success -> {
+                        result.data?.let { list ->
+                            _movieListState.update {
+                                it.copy(
+                                    isLoading = false,
+                                    nowPlayingMovieList = movieListState.value.nowPlayingMovieList + list.shuffled(),
+                                    nowPlayingMovieListPage = movieListState.value.nowPlayingMovieListPage + 1
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun getTopRatedMovies(forceFetchFromRemote : Boolean) {
+        viewModelScope.launch {
+            _movieListState.update {
+                it.copy(isLoading = true)
+            }
+            movieListRepository.getMovieList(
+                forceFetchFromRemote,
+                Category.TOP_RATED,
+                movieListState.value.topRateMovieListPage
+            ).collectLatest { result ->
+                when(result){
+                    is Resource.Error -> _movieListState.update { it.copy(isLoading = false) }
+                    is Resource.Loading -> _movieListState.update { it.copy(isLoading = result.isLoading) }
+                    is Resource.Success -> {
+                        result.data?.let {list ->
+                            _movieListState.update { it.copy(
+                                isLoading = false,
+                                topRateMovieList = movieListState.value.topRateMovieList + list.shuffled(),
+                                topRateMovieListPage = movieListState.value.topRateMovieListPage + 1
+                            ) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getFavouriteMovieList(){
+        viewModelScope.launch {
+            _movieListState.update{it.copy(isLoading = true)}
+            movieListRepository.getMovieListFromDb(Category.FAVOURITE).collectLatest {list ->
+                    _movieListState.update {
+                        it.copy(
+                            favouriteMovieList = list,
+                            isLoading = false
+                        )
+                    }
+            }
+        }
+    }
+
 }
