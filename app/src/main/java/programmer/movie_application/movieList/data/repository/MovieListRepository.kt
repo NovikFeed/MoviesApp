@@ -11,6 +11,7 @@ import programmer.movie_application.movieList.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import programmer.movie_application.movieList.util.Category
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -77,4 +78,16 @@ class MovieListRepository @Inject constructor(
             }
         }
     }
+
+    override suspend fun upsertMovie(movie: Movie) {
+        movieDatabase.movieDAO.upsertMovieToFavouriteList(movie.toMovieDBO(Category.FAVOURITE))
+    }
+
+    override suspend fun getMovieListFromDb(category: String): Flow<List<Movie>> {
+        return flow{
+            val movieDAO = movieDatabase.movieDAO.getMoviesByCategory(category)
+            emit(movieDAO.map{it.toMovie(category)})
+        }
+    }
+
 }

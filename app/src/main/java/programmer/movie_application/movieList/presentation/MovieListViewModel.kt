@@ -1,5 +1,6 @@
 package programmer.movie_application.movieList.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import programmer.movie_application.movieList.data.repository.MovieListRepository
@@ -24,6 +25,7 @@ class MovieListViewModel @Inject constructor(
         getUpcomingMovieList(false)
         getNowPlayingMovies(false)
         getTopRatedMovies(false)
+        getFavouriteMovieList()
     }
 
     fun onEvent(events: MovieListUiEvents, titleScreen : String = "Popular Movies"){
@@ -45,6 +47,9 @@ class MovieListViewModel @Inject constructor(
                 }
                 else if(events.category == Category.TOP_RATED){
                     getTopRatedMovies(true)
+                }
+                else if(events.category == Category.FAVOURITE){
+                    getFavouriteMovieList()
                 }
             }
 
@@ -155,6 +160,21 @@ class MovieListViewModel @Inject constructor(
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun getFavouriteMovieList(){
+        viewModelScope.launch {
+            _movieListState.update{it.copy(isLoading = true)}
+            movieListRepository.getMovieListFromDb(Category.FAVOURITE).collectLatest {list ->
+                    _movieListState.update {
+                        it.copy(
+                            favouriteMovieList = movieListState.value.favouriteMovieList.union(list)
+                                .toList(),
+                            isLoading = false
+                        )
+                    }
             }
         }
     }

@@ -12,4 +12,8 @@ interface MovieRepositoryInterface {
     ) : Flow<Resource<List<Movie>>>
 
     suspend fun getMovie(id : Int) : Flow<Resource<Movie>>
+
+    suspend fun upsertMovie(movie : Movie)
+
+    suspend fun getMovieListFromDb(category: String) : Flow<List<Movie>>
 }

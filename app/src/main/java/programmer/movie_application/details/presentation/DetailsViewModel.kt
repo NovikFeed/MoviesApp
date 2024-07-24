@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import programmer.movie_application.movieList.data.repository.MovieListRepository
+import programmer.movie_application.movieList.domain.model.Movie
 import programmer.movie_application.movieList.util.Resource
 import javax.inject.Inject
 
@@ -46,6 +47,11 @@ class DetailsViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+    fun addMovieToFavourite(movie : Movie){
+        viewModelScope.launch {
+            movieListRepository.upsertMovie(movie)
         }
     }
 }

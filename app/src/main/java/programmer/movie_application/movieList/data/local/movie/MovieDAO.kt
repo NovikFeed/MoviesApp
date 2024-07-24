@@ -8,6 +8,8 @@ import androidx.room.Upsert
 interface MovieDAO {
     @Upsert
     suspend fun upsertMovieList(movieList: List<MovieDBO>)
+    @Upsert
+    suspend fun upsertMovieToFavouriteList(movie : MovieDBO)
 
     @Query("SELECT * FROM MovieDBO WHERE id = :id")
     suspend fun getMoviesById(id : Int): MovieDBO
