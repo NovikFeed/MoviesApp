@@ -16,4 +16,6 @@ interface MovieRepositoryInterface {
     suspend fun upsertMovie(movie : Movie)
 
     suspend fun getMovieListFromDb(category: String) : Flow<List<Movie>>
+
+    suspend fun removeMovieFromFavourite(movie: Movie)
 }

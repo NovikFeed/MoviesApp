@@ -51,11 +51,15 @@ import programmer.movie_application.core.presentation.components.RatingBar
 import programmer.movie_application.core.presentation.util.getAverageColor
 import programmer.movie_application.details.presentation.DetailsViewModel
 import programmer.movie_application.movieList.data.remote.MovieAPI
+import programmer.movie_application.movieList.presentation.MovieListViewModel
+import programmer.movie_application.movieList.util.Category
 
 @Composable
 fun DetailsScreen() {
     val detailsViewModel = hiltViewModel<DetailsViewModel>()
     val detailsState = detailsViewModel.details.collectAsState().value
+
+    val movieListViewModel = hiltViewModel<MovieListViewModel>()
 
     val image = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
@@ -117,25 +121,46 @@ fun DetailsScreen() {
                             painter = posterImage.painter,
                             contentDescription = detailsState.movie.title
                         )
-                        Icon(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .size(50.dp)
-                                .clickable (
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null
-                                ){
-                                    detailsViewModel.addMovieToFavourite(movie)
-                                          likeIcon = if(likeIcon == Icons.Default.FavoriteBorder){
-                                              Icons.Default.Favorite
-                                          } else {
-                                              Icons.Default.FavoriteBorder
-                                          }
-
-                                },
-                            imageVector = likeIcon,
-                            contentDescription = "f",
-                        )
+                        if(movie.category == Category.FAVOURITE){
+                            likeIcon = Icons.Default.Favorite
+                            var visibility by remember{ mutableStateOf(true) }
+                            if(visibility) {
+                                Icon(
+                                    modifier = Modifier
+                                        .align(Alignment.Center)
+                                        .size(50.dp)
+                                        .clickable(
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            indication = null
+                                        ) {
+                                            detailsViewModel.removeMovieFromFavourite(movie)
+                                            visibility = false
+                                        },
+                                    imageVector = likeIcon,
+                                    contentDescription = "f",
+                                )
+                            }
+                        }
+                        else{
+                            Icon(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .size(50.dp)
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null
+                                    ) {
+                                        detailsViewModel.addMovieToFavourite(movie)
+                                        likeIcon = if (likeIcon == Icons.Default.FavoriteBorder) {
+                                            Icons.Default.Favorite
+                                        } else {
+                                            Icons.Default.FavoriteBorder
+                                        }
+                                    },
+                                imageVector = likeIcon,
+                                contentDescription = "f",
+                            )
+                        }
                     }
                 } else {
                     Box(
@@ -202,3 +227,4 @@ fun DetailsScreen() {
         }
     }
 }
+

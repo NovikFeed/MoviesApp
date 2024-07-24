@@ -54,4 +54,10 @@ class DetailsViewModel @Inject constructor(
             movieListRepository.upsertMovie(movie)
         }
     }
+
+    fun removeMovieFromFavourite(movie: Movie){
+        viewModelScope.launch {
+            movieListRepository.removeMovieFromFavourite(movie)
+        }
+    }
 }

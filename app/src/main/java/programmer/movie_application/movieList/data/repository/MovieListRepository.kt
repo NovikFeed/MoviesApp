@@ -90,4 +90,8 @@ class MovieListRepository @Inject constructor(
         }
     }
 
+    override suspend fun removeMovieFromFavourite(movie: Movie) {
+        movieDatabase.movieDAO.removeMovieFromFavourite(movie.id, Category.FAVOURITE)
+    }
+
 }
