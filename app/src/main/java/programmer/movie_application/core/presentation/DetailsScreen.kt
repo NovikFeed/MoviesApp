@@ -2,6 +2,8 @@ package programmer.movie_application.core.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +17,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.ImageNotSupported
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -66,6 +71,11 @@ fun DetailsScreen() {
             .build()
     ).state
 
+    val defaultIconFavourite = Icons.Default.FavoriteBorder
+    var likeIcon by remember{
+        mutableStateOf(defaultIconFavourite)
+    }
+
     val defaultColor = MaterialTheme.colorScheme.onSecondary
     var dominantColor by remember {
         mutableStateOf(defaultColor)
@@ -98,14 +108,35 @@ fun DetailsScreen() {
         detailsState.movie?.let{movie ->
             Row {
                 if (posterImage is AsyncImagePainter.State.Success) {
-                    Image(
-                        modifier = Modifier
-                            .size(180.dp, 260.dp)
-                            .padding(16.dp)
-                            .clip(RoundedCornerShape(12.dp)),
-                        painter = posterImage.painter,
-                        contentDescription = detailsState.movie?.title
-                    )
+                    Box(modifier = Modifier.size(180.dp,260.dp)) {
+                        Image(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .padding(16.dp)
+                                .clip(RoundedCornerShape(12.dp)),
+                            painter = posterImage.painter,
+                            contentDescription = detailsState.movie.title
+                        )
+                        Icon(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .size(50.dp)
+                                .clickable (
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ){
+                                    detailsViewModel.addMovieToFavourite(movie)
+                                          likeIcon = if(likeIcon == Icons.Default.FavoriteBorder){
+                                              Icons.Default.Favorite
+                                          } else {
+                                              Icons.Default.FavoriteBorder
+                                          }
+
+                                },
+                            imageVector = likeIcon,
+                            contentDescription = "f",
+                        )
+                    }
                 } else {
                     Box(
                         modifier = Modifier
@@ -116,7 +147,7 @@ fun DetailsScreen() {
                     ) {
                         Icon(
                             imageVector = Icons.Default.ImageNotSupported,
-                            contentDescription = detailsState.movie?.title
+                            contentDescription = detailsState.movie.title
                         )
                     }
                 }
