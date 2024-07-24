@@ -1,5 +1,8 @@
 
-# Moviem
+<div align="center">
+    <h1>Movie App</h1>
+    <img src="app/src/main/res/drawable/logo.png" alt="Logo" width="200"/>
+</div>
 
 A movie application that allows users to view popular, upcoming, and highly-rated films, as well as track movies they are currently watching. The app also includes a wishlist feature for saving favorite movies.
 
