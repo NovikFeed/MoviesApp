@@ -1,12 +1,20 @@
 package programmer.movie_application.core.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -18,6 +26,7 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -28,6 +37,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import programmer.movie_application.core.MainActivity
 import programmer.movie_application.movieList.presentation.MovieListState
 import programmer.movie_application.movieList.presentation.MovieListUiEvents
 import programmer.movie_application.movieList.presentation.MovieListViewModel
@@ -47,6 +57,22 @@ fun HomeScreen(navController: NavHostController){
                      title = {
                      Text(text = movieState.currentScreenTitle)
                              },
+                     actions = {
+                         Icon(
+                             modifier = Modifier
+                                 .size(50.dp)
+                                 .padding(end = 16.dp)
+                                 .clickable(
+                                     interactionSource = remember { MutableInteractionSource() },
+                                     indication = null
+                                 ) {
+                                   bottomNavController.navigate(Screen.FavouriteMovieScreen.rout)
+                                     movieListViewModel.onEvent(MovieListUiEvents.Navigate, "Favourite movies")
+                                 },
+                             imageVector = Icons.Default.FavoriteBorder,
+                             contentDescription = "Favourite"
+                         )
+                     },
                      modifier = Modifier.shadow(2.dp),
                      colors = topAppBarColors(
                          MaterialTheme.colorScheme.inverseOnSurface
@@ -88,6 +114,9 @@ fun HomeScreen(navController: NavHostController){
                         movieStateList = movieState,
                         onEvent = movieListViewModel::onEvent
                     )
+                }
+                composable(Screen.FavouriteMovieScreen.rout){
+                    FavouriteMovieScreen(navController = navController, movieStateList = movieState, onEvent = movieListViewModel::onEvent)
                 }
             }
         }
@@ -131,6 +160,10 @@ fun BottomBar(
                             3 -> {onEvent(MovieListUiEvents.Navigate, "Now Playing Movies")
                                 navController.popBackStack()
                                 navController.navigate(Screen.NowPlayingMovieList.rout)
+                            }
+                            4 -> {onEvent(MovieListUiEvents.Navigate, "Favourite Movies")
+                                navController.popBackStack()
+                                navController.navigate(Screen.FavouriteMovieScreen.rout)
                             }
                         }
                               },
