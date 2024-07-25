@@ -6,6 +6,9 @@
 
 A movie application that allows users to view popular, upcoming, and highly-rated films, as well as track movies they are currently watching. The app also includes a wishlist feature for saving favorite movies.
 
+## GIF
+![Example](/app/src/main/res/drawable/gif.gif)
+
 ## Description
 
 This project is designed to help users discover and keep track of their favorite films. The app fetches data from movie databases to provide up-to-date information on the latest and most popular movies. Users can also save movies to a wishlist for easy access later. The app offers a user-friendly interface built with Kotlin and Jetpack Compose for a seamless experience.
