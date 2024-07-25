@@ -6,8 +6,10 @@
 
 A movie application that allows users to view popular, upcoming, and highly-rated films, as well as track movies they are currently watching. The app also includes a wishlist feature for saving favorite movies.
 
-## GIF
-![Example](/app/src/main/res/drawable/gif.gif)
+<div align="center">
+    <h1>GIF</h1>
+    <img src="app/src/main/res/video/exxample_gif.gif" alt="Logo" width="200"/>
+</div>
 
 ## Description
 
